@@ -1,0 +1,33 @@
+name: Azure DevOps Pipeline
+
+on:
+  push:
+    branches:
+      - main  # 触发条件：当代码被推送到 main 分支时
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # 使用 Ubuntu 环境
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2  # 检出代码
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1  # 设置 .NET Core 环境
+
+    - name: Restore NuGet packages
+      run: dotnet restore  # 还原 NuGet 包
+
+    - name: Build
+      run: dotnet build --configuration Release  # 构建项目
+
+    - name: Test
+      run: dotnet test --configuration Release  # 运行测试
+
+    - name: Publish artifacts
+      run: |
+        mkdir publish
+        cp -r ./path-to-your-publish-folder/* ./publish/
+      artifacts:
+        path: publish  # 发布构建产物
